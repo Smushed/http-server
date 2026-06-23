@@ -11,6 +11,7 @@ class Listener {
         static int listenOnPort(char *argv[]);
     private:
         [[noreturn]] static int spinUp(char *argv[]);
+        std::string readBytes(int socket, unsigned int x, void* buffer);
 };
 
 

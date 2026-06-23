@@ -6,8 +6,7 @@
 
 
 int main(int argc, char *argv[]) {
-    Listener listener {};
-    listener.listenOnPort(argv);
+    Listener::listenOnPort(argv);
 
     return 0;
 }
