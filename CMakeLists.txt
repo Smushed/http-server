@@ -9,4 +9,6 @@ add_executable(http_server main.cpp
         request/HttpRequest.cpp
         request/HttpRequest.h
         routes/HttpMethod.h
+        request/HttpHeader.cpp
+        request/HttpHeader.h
 )
