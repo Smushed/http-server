@@ -1,17 +1,18 @@
-//
-// Created by smushed on 6/20/26.
-//
-
 #ifndef HTTP_SERVER_LISTENER_H
 #define HTTP_SERVER_LISTENER_H
+// #include "route/HttpRoute.h"
 
 
 class Listener {
     public:
-        static int listenOnPort(char *argv[]);
+        void run();
+        Listener(char *argv[]);
+        ~Listener();
     private:
-        [[noreturn]] static int spinUp(char *argv[]);
-        std::string readBytes(int socket, unsigned int x, void* buffer);
+        void spinUp();
+        void respond(int, std::string_view);
+        int listeningSocket{-1};
+        const int BUF_SIZE{8192};
 };
 
 
