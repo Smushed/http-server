@@ -17,7 +17,7 @@ constexpr HttpMethod textToHttpMethod(const std::string_view method) {
     if (method == "DELETE") return DELETE;
 }
 
-constexpr std::string_view getHttpMethodFromText(const HttpMethod method) {
+constexpr std::string_view getTextFromHttpMethod(const HttpMethod method) {
     using enum HttpMethod;
     switch (method) {
         case GET: return "GET";

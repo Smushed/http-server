@@ -6,6 +6,7 @@
 #include <sstream>
 #include <unistd.h>
 #include "request/HttpRequest.h"
+#include "routes/Router.h"
 
 Listener::Listener(char *argv[]) {
     addrinfo hints{};
@@ -52,7 +53,15 @@ Listener::~Listener() {
 
 void Listener::run() {
     // this->base = HttpRoute(HttpMethod::GET);
+    createRouter();
     spinUp();
+}
+
+void Listener::createRouter() {
+    Router router{};
+    Route index{"/index.html"};
+
+    router.registerRoute(index);
 }
 
 void Listener::respond(int socket, std::string_view sv) {
@@ -75,7 +84,6 @@ void Listener::spinUp() {
             default: ;
         }
 
-        HttpMethod requestMethod;
         std::string requestAccumulator {};
 
         while (true) {
@@ -89,11 +97,6 @@ void Listener::spinUp() {
 
             if (bytesReceived > 0) {
                 requestAccumulator.append(buf, bytesReceived);
-                // std::stringstream ss(requestAccumulator);
-                // std::string word;
-                // while (ss >> word) {
-                //     std::cout << word << std::endl;
-                // }
                 if (requestAccumulator.find("\r\n\r\n") != std::string::npos) {
                     break;
                 }
@@ -105,18 +108,12 @@ void Listener::spinUp() {
             }
         }
 
-        // std::stringstream ss(requestAccumulator);
-        // std::string httpHeader{};
-        // while (std::getline(ss, httpHeader, ' ')) {
-        //     std::cout << httpHeader;
-        // }
-        // int sendResponse = send(connectionSocket, requestAccumulator.c_str(), sizeof(requestAccumulator), 0);
-
-
-        // std::cout << requestAccumulator << std::endl;
-
-        HttpRequest route(requestAccumulator);
-        this->respond(connectionSocket, requestAccumulator);
+        try {
+            HttpRequest request(requestAccumulator);
+            this->respond(connectionSocket, requestAccumulator);
+        } catch (std::runtime_error& err) {
+            this->respond(connectionSocket, err.what());
+        }
 
         close(connectionSocket);
     }

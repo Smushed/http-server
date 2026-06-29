@@ -1,27 +1,27 @@
 #include "HttpHeader.h"
-
-#include <iostream>
 #include <sstream>
 
-HttpHeader::HttpHeader(std::string_view header) {
+HttpHeader::HttpHeader(const std::string_view header) {
     std::stringstream ss(header);
     std::string parsedVal {};
+    int i {0};
 
     constexpr int METHOD_POSITION {0};
-    constexpr int URL_POSITION {1};
+    constexpr int URI_POSITION {1};
     constexpr int VERSION_POSITION {2};
-    for (int i = 0; i <= VERSION_POSITION; i++) {
+    while (ss >> parsedVal) {
         if (i == METHOD_POSITION) {
             this->method = textToHttpMethod(parsedVal);
-        } else if (i == URL_POSITION) {
-            ss >> this->uri;
-        } else if (i == VERSION_POSITION) {
-            ss >> this->version;
         }
+        if (i == URI_POSITION) {
+            this->uri = parsedVal;
+        }
+        if (i == VERSION_POSITION) {
+            this->version = parsedVal;
+        }
+        if (i > VERSION_POSITION) {
+            break;
+        }
+        i++;
     }
-    // while (ss >> parsedVal) {
-    //     if ()
-    //     std::cout << parsedVal << std::endl;
-    // }
-    // this->method =
 }

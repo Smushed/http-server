@@ -8,7 +8,13 @@ add_executable(http_server main.cpp
         Listener.h
         request/HttpRequest.cpp
         request/HttpRequest.h
-        routes/HttpMethod.h
+        HttpMethod.h
         request/HttpHeader.cpp
         request/HttpHeader.h
+        routes/gets/Index.cpp
+        routes/gets/Index.h
+        routes/Router.cpp
+        routes/Router.h
+        routes/Route.cpp
+        routes/Route.h
 )
