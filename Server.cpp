@@ -1,14 +1,14 @@
 #include <iostream>
 #include <netdb.h>
 #include <sys/socket.h>
-#include "Listener.h"
+#include "Server.h"
 #include <cstring>
 #include <sstream>
 #include <unistd.h>
 #include "request/HttpRequest.h"
 #include "routes/Router.h"
 
-Listener::Listener(char *argv[]) {
+Server::Server(char *argv[]) {
     addrinfo hints{};
     addrinfo *result, *rp;
 
@@ -46,30 +46,32 @@ Listener::Listener(char *argv[]) {
     }
 }
 
-Listener::~Listener() {
+Server::~Server() {
     if (listeningSocket == -1) return;
     close(listeningSocket);
 }
 
-void Listener::run() {
+void Server::run() {
     // this->base = HttpRoute(HttpMethod::GET);
     createRouter();
     spinUp();
 }
 
-void Listener::createRouter() {
-    Router router{};
-    Route index{"/index.html"};
-
-    router.registerRoute(index);
+void Server::createRouter() {
+    // Route index{"/index.html"};
+    router.registerRoute(Route {HttpMethod::GET, "/index.html"});
 }
 
-void Listener::respond(int socket, std::string_view sv) {
-    ssize_t sendResponse = send(socket, sv.data(), sv.size(), 0);
-    std::cout << "Send Reponse: " << sendResponse;
+void Server::respond(int socket, HttpRequest sv) {
+    std::vector<Route> routes = this->router.getRoutesByMethod(sv.getMethod());
+    for (const auto& route : routes) {
+        std::cout << route.getUri() << std::endl;
+    }
+    // ssize_t sendResponse = send(socket, sv.data(), sv.size(), 0);
+    // std::cout << "Send Reponse: " << sendResponse;
 }
 
-void Listener::spinUp() {
+void Server::spinUp() {
     char buf[BUF_SIZE];
     sockaddr_storage peer_addr {};
     listen(listeningSocket, 5);
@@ -110,9 +112,9 @@ void Listener::spinUp() {
 
         try {
             HttpRequest request(requestAccumulator);
-            this->respond(connectionSocket, requestAccumulator);
+            this->respond(connectionSocket, request);
         } catch (std::runtime_error& err) {
-            this->respond(connectionSocket, err.what());
+            throw;
         }
 
         close(connectionSocket);

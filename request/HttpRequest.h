@@ -10,9 +10,9 @@ class HttpRequest {
     public:
         HttpMethod getMethod() const { return header.method; }
         HttpRequest(std::string_view connectionString);
-        void processRequest();
     private:
         HttpHeader header;
+        std::string version;
 };
 
 

@@ -2,8 +2,8 @@
 #define HTTP_SERVER_GETROUTES_H
 
 
-class Index {
-
+struct Index {
+    
 };
 
 

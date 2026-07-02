@@ -7,10 +7,11 @@
 
 
 class Router {
-    std::map<HttpMethod,std::vector<Route>> routeList;
     public:
         void registerRoute(const Route& route);
-        std::vector<Route> getRoutesByMethod();
+        std::vector<Route> getRoutesByMethod(HttpMethod reqMethod);
+    private:
+        std::map<HttpMethod,std::vector<Route>> m_routeList;
 };
 
 
