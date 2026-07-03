@@ -8,6 +8,7 @@ class Route {
     public:
         HttpMethod getMethod() const { return m_method; }
         std::string getUri() const { return m_uri; }
+        Route()= default;
         Route(HttpMethod method,
             std::string incomingUri,
             std::function<int()> action);

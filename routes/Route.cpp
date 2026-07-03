@@ -17,11 +17,11 @@ int testing() {
     return 1;
 }
 
-Route::Route(const HttpMethod method, std::string incomingUri) {
-    this->m_method = method;
-    this->m_uri = std::move(incomingUri);
-    this->m_action = testing;
-}
+Route::Route(const HttpMethod method, std::string incomingUri)
+    :   m_method(method),
+        m_uri(std::move(incomingUri)),
+        m_action(&testing)
+{}
 
 void Route::performAction() const {
     if (this->m_action) {

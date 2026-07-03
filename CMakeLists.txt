@@ -17,4 +17,5 @@ add_executable(http_server main.cpp
         routes/Router.h
         routes/Route.cpp
         routes/Route.h
+        routes/StatusCodes.h
 )

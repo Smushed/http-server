@@ -11,7 +11,6 @@ class Server {
     private:
         void spinUp();
         void createRouter();
-        void respond(int, HttpRequest);
         Router router{};
         int listeningSocket{-1};
         const int BUF_SIZE{8192};

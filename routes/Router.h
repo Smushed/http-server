@@ -4,14 +4,16 @@
 #include <map>
 #include "Route.h"
 #include "../HttpMethod.h"
-
+#include "../request/HttpRequest.h"
 
 class Router {
     public:
         void registerRoute(const Route& route);
-        std::vector<Route> getRoutesByMethod(HttpMethod reqMethod);
+        void processRequest(int socket, HttpRequest request);
     private:
+        const std::vector<Route>& getRoutesByMethod(HttpMethod reqMethod);
         std::map<HttpMethod,std::vector<Route>> m_routeList;
+        std::string buildResponse(std::string& version, const std::string& message);
 };
 
 

@@ -58,17 +58,7 @@ void Server::run() {
 }
 
 void Server::createRouter() {
-    // Route index{"/index.html"};
     router.registerRoute(Route {HttpMethod::GET, "/index.html"});
-}
-
-void Server::respond(int socket, HttpRequest sv) {
-    std::vector<Route> routes = this->router.getRoutesByMethod(sv.getMethod());
-    for (const auto& route : routes) {
-        std::cout << route.getUri() << std::endl;
-    }
-    // ssize_t sendResponse = send(socket, sv.data(), sv.size(), 0);
-    // std::cout << "Send Reponse: " << sendResponse;
 }
 
 void Server::spinUp() {
@@ -111,8 +101,7 @@ void Server::spinUp() {
         }
 
         try {
-            HttpRequest request(requestAccumulator);
-            this->respond(connectionSocket, request);
+            this->router.processRequest(connectionSocket, HttpRequest (requestAccumulator));
         } catch (std::runtime_error& err) {
             throw;
         }
