@@ -1,6 +1,4 @@
 #include "HttpHeader.h"
-
-#include <iostream>
 #include <sstream>
 
 HttpHeader::HttpHeader(const std::string_view header) {

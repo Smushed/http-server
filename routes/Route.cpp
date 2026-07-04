@@ -23,7 +23,7 @@ Route::Route(const HttpMethod method, std::string incomingUri)
         m_action(&testing)
 {}
 
-void Route::performAction() const {
+std::string Route::performAction() const {
     if (this->m_action) {
         this->m_action();
     }

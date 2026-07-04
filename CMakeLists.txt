@@ -6,11 +6,11 @@ set(CMAKE_CXX_STANDARD 26)
 add_executable(http_server main.cpp
         Server.cpp
         Server.h
-        request/HttpRequest.cpp
-        request/HttpRequest.h
+        HttpMethods/HttpRequest.cpp
+        HttpMethods/HttpRequest.h
         HttpMethod.h
-        request/HttpHeader.cpp
-        request/HttpHeader.h
+        HttpMethods/HttpHeader.cpp
+        HttpMethods/HttpHeader.h
         routes/gets/Index.cpp
         routes/gets/Index.h
         routes/Router.cpp
@@ -18,4 +18,6 @@ add_executable(http_server main.cpp
         routes/Route.cpp
         routes/Route.h
         routes/StatusCodes.h
+        HttpMethods/HttpResponse.cpp
+        HttpMethods/HttpResponse.h
 )

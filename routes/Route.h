@@ -6,15 +6,15 @@
 
 class Route {
     public:
-        HttpMethod getMethod() const { return m_method; }
-        std::string getUri() const { return m_uri; }
-        Route()= default;
+        [[nodiscard]] HttpMethod getMethod() const { return m_method; }
+        [[nodiscard]] std::string getUri() const { return m_uri; }
+        // Route()= default;
         Route(HttpMethod method,
             std::string incomingUri,
             std::function<int()> action);
         Route(HttpMethod method,
             std::string incomingUri);
-        void performAction() const;
+        [[nodiscard]] std::string performAction() const;
     private:
         std::function<int()> m_action;
         std::string m_uri;

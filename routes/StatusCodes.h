@@ -3,7 +3,7 @@
 
 #include <map>
 
-inline const std::map<int, std::string> STATUS_CODES = {
+inline const std::map<int, const char*> STATUS_CODES = {
     {200, "OK"},
     {404, "404 Not Found"},
     {500, "Internal Server Error"}

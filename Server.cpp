@@ -5,7 +5,7 @@
 #include <cstring>
 #include <sstream>
 #include <unistd.h>
-#include "request/HttpRequest.h"
+#include "HttpMethods/HttpRequest.h"
 #include "routes/Router.h"
 
 Server::Server(char *argv[]) {

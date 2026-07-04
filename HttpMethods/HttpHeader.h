@@ -7,7 +7,7 @@ struct HttpHeader {
     std::string uri;
     std::string version;
 
-    HttpHeader(std::string_view header);
+    explicit HttpHeader(std::string_view header);
 };
 
 #endif //HTTP_SERVER_HTTPHEADER_H
