@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "HttpMethods/HttpRequest.h"
 #include "routes/Router.h"
+#include "routes/gets/Index.h"
 
 Server::Server(char *argv[]) {
     addrinfo hints{};
@@ -52,13 +53,12 @@ Server::~Server() {
 }
 
 void Server::run() {
-    // this->base = HttpRoute(HttpMethod::GET);
     createRouter();
     spinUp();
 }
 
 void Server::createRouter() {
-    router.registerRoute(Route {HttpMethod::GET, "/index.html"});
+    router.registerRoute(Route {HttpMethod::GET, "/index.html", servePage()});
 }
 
 void Server::spinUp() {

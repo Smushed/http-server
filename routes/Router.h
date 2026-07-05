@@ -13,7 +13,6 @@ class Router {
     private:
         const std::vector<Route>& getRoutesByMethod(HttpMethod reqMethod);
         std::map<HttpMethod,std::vector<Route>> m_routeList;
-        static std::string buildResponse(const std::string& version, std::string_view message);
 };
 
 

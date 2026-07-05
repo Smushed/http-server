@@ -1,5 +1,5 @@
-#include "HttpHeader.h"
 #include <sstream>
+#include "HttpHeader.h"
 
 HttpHeader::HttpHeader(const std::string_view header) {
     std::stringstream ss(header);

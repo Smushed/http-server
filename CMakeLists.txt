@@ -11,7 +11,6 @@ add_executable(http_server main.cpp
         HttpMethod.h
         HttpMethods/HttpHeader.cpp
         HttpMethods/HttpHeader.h
-        routes/gets/Index.cpp
         routes/gets/Index.h
         routes/Router.cpp
         routes/Router.h
@@ -20,4 +19,5 @@ add_executable(http_server main.cpp
         routes/StatusCodes.h
         HttpMethods/HttpResponse.cpp
         HttpMethods/HttpResponse.h
+        routes/gets/Index.cpp
 )

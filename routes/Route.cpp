@@ -6,24 +6,24 @@
 
 Route::Route(const HttpMethod method,
         std::string incomingUri,
-        std::function<int()> action) {
+        const std::function<std::string()>& action) {
     this->m_method = method;
     this->m_uri = std::move(incomingUri);
-    this->m_action = std::move(action);
+    this->m_action = action;
 }
 
-int testing() {
+std::string testing() {
     std::cout << "up";
-    return 1;
+    return "up";
 }
 
 Route::Route(const HttpMethod method, std::string incomingUri)
-    :   m_method(method),
+    :   m_action(&testing),
         m_uri(std::move(incomingUri)),
-        m_action(&testing)
+        m_method(method)
 {}
 
-std::string Route::performAction() const {
+void Route::performAction() const {
     if (this->m_action) {
         this->m_action();
     }

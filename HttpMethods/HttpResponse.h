@@ -5,12 +5,13 @@
 
 struct HttpResponse {
     HttpResponse()=default;
-    HttpResponse(int version, int statusCode, std::string message, std::string body);
-    HttpResponse(int version, int statusCode, std::string message, std::vector<char> data);
-    void buildResponse(int version, int statusCode, std::string message, std::string body);
-    void buildResponse(int version, int statusCode, std::string message, std::vector<char> data);
+    HttpResponse(std::string_view version, int statusCode, std::string_view message, std::string_view body);
+    HttpResponse(std::string_view version, int statusCode, std::string_view message, const std::vector<char>& data);
+    void build(std::string_view version, int statusCode, std::string_view message, std::string_view body);
+    void build(std::string_view version, int statusCode, std::string_view message, const std::vector<char>& data);
+    void sendResponse(int socket, int flags) const;
     private:
-        int m_version;
+        std::string m_version;
         int m_statusCode;
         std::string m_message;
         std::string m_body;
