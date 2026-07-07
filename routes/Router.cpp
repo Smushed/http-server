@@ -18,13 +18,13 @@ void Router::processRequest(const int& socket, HttpRequest request) {
         }
     }
 
-    HttpResponse response {};
+    HttpResponse response(request.getVersion());
     try {
         if (!reqRoute) {
             const std::string& fourOFourMessage{STATUS_CODES.at(404)};
-            response.build(request.getVersion(), 404, fourOFourMessage, fourOFourMessage);
+            response.updateWithResult(404, fourOFourMessage, fourOFourMessage);
         } else {
-            // response = reqRoute->performAction();
+            reqRoute->performAction(response);
         }
     } catch (error_t err) {
         std::cout << "Error processing request\n" << err << std::endl;

@@ -22,6 +22,10 @@ HttpResponse::HttpResponse(const std::string_view version, const int statusCode,
         m_data{data}
 {}
 
+HttpResponse::HttpResponse(const std::string_view version)
+    :   m_version{version}
+{}
+
 void HttpResponse::build(const std::string_view version, const int statusCode, const std::string_view message, const std::string_view body) {
     this->m_version = version;
     this->m_statusCode = statusCode;
@@ -30,8 +34,22 @@ void HttpResponse::build(const std::string_view version, const int statusCode, c
     this->m_data = std::vector<char>();
 }
 
+void HttpResponse::updateWithResult(const int statusCode, const std::string_view message, const std::string_view body) {
+    this->m_statusCode = statusCode;
+    this->m_message = message;
+    this->m_body = body;
+    this->m_data = std::vector<char>();
+}
+
 void HttpResponse::build(const std::string_view version, const int statusCode, const std::string_view message, const std::vector<char>& data) {
     this->m_version = version;
+    this->m_statusCode = statusCode;
+    this->m_message = message;
+    this->m_body = "";
+    this->m_data = data;
+}
+
+void HttpResponse::updateWithResult(const int statusCode, const std::string_view message, const std::vector<char>& data) {
     this->m_statusCode = statusCode;
     this->m_message = message;
     this->m_body = "";
