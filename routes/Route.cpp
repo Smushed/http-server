@@ -8,15 +8,15 @@
 
 Route::Route(const HttpMethod method,
              std::string incomingUri,
-             const std::function<std::string(HttpResponse&)>& action) {
+             const std::function<void(HttpResponse&)>& action) {
     this->m_method = method;
     this->m_uri = std::move(incomingUri);
     this->m_action = action;
 }
 
-std::string testing(HttpResponse response) {
+void testing(HttpResponse response) {
     std::cout << "up";
-    return "up";
+    // return "up";
 }
 
 Route::Route(const HttpMethod method, std::string incomingUri)
