@@ -59,6 +59,8 @@ void Server::run() {
 
 void Server::createRouter() {
     router.registerRoute(Route {HttpMethod::GET, "/index.html", Index::servePage});
+    router.registerRoute(Route {HttpMethod::GET, "/app.js", Index::serveJS});
+    router.registerRoute(Route {HttpMethod::GET, "/styles.css", Index::serveCSS});
 }
 
 void Server::spinUp() {
@@ -72,7 +74,6 @@ void Server::spinUp() {
         switch (connectionSocket) {
             case 0: printf("Connection Terminated\n"); continue;
             case -1: printf("error\n");
-;
             default: ;
         }
 
@@ -101,7 +102,8 @@ void Server::spinUp() {
         }
 
         try {
-            this->router.processRequest(connectionSocket, HttpRequest (requestAccumulator));
+            const HttpRequest request {requestAccumulator};
+            this->router.processRequest(connectionSocket, request);
         } catch (std::runtime_error& err) {
             throw;
         }

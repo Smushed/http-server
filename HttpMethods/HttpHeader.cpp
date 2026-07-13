@@ -1,11 +1,12 @@
 #include <sstream>
 #include "HttpHeader.h"
 
+#include <iostream>
+
 HttpHeader::HttpHeader(const std::string_view header) {
     std::stringstream ss(header);
     std::string parsedVal {};
     int i {0};
-
     constexpr int METHOD_POSITION {0};
     constexpr int URI_POSITION {1};
     constexpr int VERSION_POSITION {2};

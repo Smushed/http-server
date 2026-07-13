@@ -27,7 +27,6 @@ Route::Route(const HttpMethod method, std::string incomingUri)
 
 void Route::performAction(HttpResponse& response) const {
     if (this->m_action) {
-        std::string result = this->m_action(response);
-        // response
+        m_action(response);
     }
 }

@@ -4,6 +4,8 @@
 
 struct Index {
     static void servePage(HttpResponse& response);
+    static void serveJS(HttpResponse& response);
+    static void serveCSS(HttpResponse& response);
 };
 
 

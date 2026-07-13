@@ -22,7 +22,7 @@ void Router::processRequest(const int& socket, HttpRequest request) {
     try {
         if (!reqRoute) {
             const std::string& fourOFourMessage{STATUS_CODES.at(404)};
-            response.updateWithResult(404, fourOFourMessage, fourOFourMessage);
+            response.updateWithResult(404, fourOFourMessage, fourOFourMessage, "html");
         } else {
             reqRoute->performAction(response);
         }

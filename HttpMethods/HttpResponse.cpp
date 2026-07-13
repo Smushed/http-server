@@ -1,12 +1,28 @@
 #include "HttpResponse.h"
 
 #include <iostream>
+#include <sstream>
 #include <sys/socket.h>
 
 constexpr int defaultResponseSize() { return 57; }
 constexpr std::string spacer() { return "\r\n"; }
-constexpr std::string contentTypeText() { return "Content-Type: text/plain"; }
 constexpr std::string contentLength() { return "Content-Length: "; }
+constexpr std::string contentTypeText(const std::string_view fileType) {
+    std::string contentType {"Content-Type: "};
+
+    if (fileType == "html") {
+        contentType.append("text/html;");
+    }
+    if (fileType == "js") {
+        contentType.append("application/javascript");
+    }
+    if (fileType == "css") {
+        contentType.append("text/css");
+    }
+
+    // contentType += " charset=utf-8";
+    return contentType;
+}
 
 HttpResponse::HttpResponse(const std::string_view version, const int statusCode, std::string_view message, std::string_view body)
     :   m_version{version},
@@ -34,10 +50,12 @@ void HttpResponse::build(const std::string_view version, const int statusCode, c
     this->m_data = std::vector<char>();
 }
 
-void HttpResponse::updateWithResult(const int statusCode, const std::string_view message, const std::string_view body) {
+void HttpResponse::updateWithResult(const int statusCode, const std::string_view message,
+        const std::string_view body, const std::string_view fileType) {
     this->m_statusCode = statusCode;
     this->m_message = message;
     this->m_body = body;
+    this->m_fileType = fileType;
     this->m_data = std::vector<char>();
 }
 
@@ -49,10 +67,12 @@ void HttpResponse::build(const std::string_view version, const int statusCode, c
     this->m_data = data;
 }
 
-void HttpResponse::updateWithResult(const int statusCode, const std::string_view message, const std::vector<char>& data) {
+void HttpResponse::updateWithResult(const int statusCode, const std::string_view message,
+        const std::vector<char>& data, const std::string_view fileType) {
     this->m_statusCode = statusCode;
     this->m_message = message;
     this->m_body = "";
+    this->m_fileType = fileType;
     this->m_data = data;
 }
 
@@ -64,9 +84,8 @@ void HttpResponse::sendResponse(const int socket, const int flags) const {
 
     responseBuffer.append(m_version);
     responseBuffer.append(" ");
-    responseBuffer.append(m_body);
     responseBuffer.append(spacer());
-    responseBuffer.append(contentTypeText());
+    responseBuffer.append(contentTypeText(m_fileType));
     responseBuffer.append(spacer());
     responseBuffer.append(contentLength());
     responseBuffer.append(std::to_string(bodySize));
