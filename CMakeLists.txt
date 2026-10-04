@@ -20,4 +20,7 @@ add_executable(http_server main.cpp
         HttpMethods/HttpResponse.cpp
         HttpMethods/HttpResponse.h
         routes/gets/Index.cpp
+        routes/HttpPageRoute.cpp
+        routes/HttpPageRoute.h
+        tools/LoadFile.h
 )

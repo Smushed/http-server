@@ -20,7 +20,6 @@ constexpr std::string contentTypeText(const std::string_view fileType) {
         contentType.append("text/css");
     }
 
-    // contentType += " charset=utf-8";
     return contentType;
 }
 

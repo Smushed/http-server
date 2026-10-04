@@ -58,9 +58,7 @@ void Server::run() {
 }
 
 void Server::createRouter() {
-    router.registerRoute(Route {HttpMethod::GET, "/index.html", Index::servePage});
-    router.registerRoute(Route {HttpMethod::GET, "/app.js", Index::serveJS});
-    router.registerRoute(Route {HttpMethod::GET, "/styles.css", Index::serveCSS});
+    router.registerRoute(Route {HttpMethod::GET, "/home", Index::servePage});
 }
 
 void Server::spinUp() {

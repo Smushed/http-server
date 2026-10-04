@@ -10,11 +10,11 @@ class Route {
         [[nodiscard]] HttpMethod getMethod() const { return m_method; }
         [[nodiscard]] std::string getUri() const { return m_uri; }
         // Route()= default;
-        Route(HttpMethod method, std::string incomingUri, const std::function<void(HttpResponse&)>& action);
+        Route(HttpMethod method, std::string incomingUri, const std::function<void(HttpResponse&, std::string_view)>& action);
         Route(HttpMethod method, std::string incomingUri);
-        void performAction(HttpResponse& response) const;
+        void performAction(HttpResponse& response, std::string_view subPath) const;
     private:
-        std::function<void(HttpResponse&)> m_action;
+        std::function<void(HttpResponse&, std::string_view)> m_action;
         std::string m_uri;
         HttpMethod m_method;
 };

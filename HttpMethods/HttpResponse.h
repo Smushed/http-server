@@ -3,6 +3,10 @@
 #include <string>
 #include <vector>
 
+#include "../tools/LoadFile.h"
+
+
+
 struct HttpResponse {
     HttpResponse()=default;
     HttpResponse(std::string_view version, int statusCode, std::string_view message, std::string_view body);
@@ -15,6 +19,10 @@ struct HttpResponse {
     void updateWithResult(int statusCode, std::string_view message, const std::vector<char>& data, std::string_view fileType);
 
     void sendResponse(int socket, int flags) const;
+
+    static std::string serve404 () {
+        return loadFile("../assets/404/404.html");
+    }
     private:
         std::string m_fileType;
         std::string m_version;
