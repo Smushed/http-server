@@ -33,7 +33,7 @@ void Router::processRequest(const int& socket, HttpRequest request) {
     try {
         if (!reqRoute) {
             const std::string out = loadFile("/home/smushed/Coding/http-server/assets/404/404.html");
-            response.updateWithResult(200, "Success", out, "html");
+            response.updateWithResult(404, "Not Found", out, "html");
         } else {
             reqRoute->performAction(response, subPath);
         }

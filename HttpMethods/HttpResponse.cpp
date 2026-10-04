@@ -83,6 +83,9 @@ void HttpResponse::sendResponse(const int socket, const int flags) const {
 
     responseBuffer.append(m_version);
     responseBuffer.append(" ");
+    responseBuffer.append(std::to_string(m_statusCode));
+    responseBuffer.append(" ");
+    responseBuffer.append(m_message);
     responseBuffer.append(spacer());
     responseBuffer.append(contentTypeText(m_fileType));
     responseBuffer.append(spacer());
