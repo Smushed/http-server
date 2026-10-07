@@ -75,7 +75,7 @@ void HttpResponse::updateWithResult(const int statusCode, const std::string_view
     this->m_data = data;
 }
 
-void HttpResponse::sendResponse(const int socket, const int flags) const {
+void HttpResponse::sendResponse(const ConnectionSocket& socket, const int flags) const {
 
     std::string responseBuffer {};
     const unsigned long bodySize { this->m_body.size() };
@@ -99,7 +99,7 @@ void HttpResponse::sendResponse(const int socket, const int flags) const {
     size_t bytesLeft = responseBuffer.size();
 
     while (bytesLeft > 0) {
-        const long bytesSent = send(socket, ptr, bytesLeft, flags);
+        const long bytesSent = send(socket.get(), ptr, bytesLeft, flags);
         if (bytesSent == -1) {
             std::cout << "Error in sending response to client" << std::endl;
             throw std::runtime_error("Error sending response");

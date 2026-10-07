@@ -8,6 +8,7 @@
 #include "HttpMethods/HttpRequest.h"
 #include "routes/Router.h"
 #include "routes/gets/Index.h"
+#include "tools/ConnectionSocket.h"
 
 Server::Server(char *argv[]) {
     addrinfo hints{};
@@ -34,6 +35,8 @@ Server::Server(char *argv[]) {
 
         int opt = 1;
         if (setsockopt(listeningSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+            close(listeningSocket);
+            freeaddrinfo(result);
             throw std::runtime_error("setsockopt(SO_REUSEADDR) failed");
         }
 
@@ -68,35 +71,38 @@ void Server::spinUp() {
     socklen_t addr_size = sizeof peer_addr;
 
     while (true) {
-        const int connectionSocket = accept(listeningSocket, (struct sockaddr *)&peer_addr , &addr_size);
-        switch (connectionSocket) {
+        const auto connectionSocket = ConnectionSocket(accept(listeningSocket, (struct sockaddr *)&peer_addr , &addr_size));
+        switch (connectionSocket.get()) {
             case 0: printf("Connection Terminated\n"); continue;
-            case -1: printf("error\n");
+            case -1: {
+                printf("error\n");
+                continue;
+            }
             default: ;
         }
 
         std::string requestAccumulator {};
 
         while (true) {
-            const ssize_t bytesReceived = recv(connectionSocket, buf, BUF_SIZE, 0);
+            const ssize_t bytesReceived = recv(connectionSocket.get(), buf, BUF_SIZE, 0);
             switch (bytesReceived) {
                 case 0: printf("Connection Terminated\n"); break;
                 case -1: perror("recv failed"); break;
                 default: ;
             }
 
+            bool receivedHeaders = false;
 
             if (bytesReceived > 0) {
                 requestAccumulator.append(buf, bytesReceived);
                 if (requestAccumulator.find("\r\n\r\n") != std::string::npos) {
+                    receivedHeaders = true;
                     break;
                 }
-            } else if (bytesReceived == 0) {
-                close(connectionSocket);
-                break;
             } else {
                 break;
             }
+            if (!receivedHeaders) break;
         }
 
         try {
@@ -105,7 +111,5 @@ void Server::spinUp() {
         } catch (std::runtime_error& err) {
             throw;
         }
-
-        close(connectionSocket);
     }
 }

@@ -5,11 +5,12 @@
 #include "Route.h"
 #include "../HttpMethod.h"
 #include "../HttpMethods/HttpRequest.h"
+#include "../tools/ConnectionSocket.h"
 
 class Router {
     public:
         void registerRoute(const Route& route);
-        void processRequest(const int& socket, HttpRequest request);
+        void processRequest(const ConnectionSocket& socket, HttpRequest request);
     private:
         const std::vector<Route>& getRoutesByMethod(HttpMethod reqMethod);
         std::map<HttpMethod,std::vector<Route>> m_routeList;

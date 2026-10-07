@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "../tools/ConnectionSocket.h"
 #include "../tools/LoadFile.h"
 
 
@@ -18,7 +19,7 @@ struct HttpResponse {
     void updateWithResult(int statusCode, std::string_view message, std::string_view body, std::string_view fileType);
     void updateWithResult(int statusCode, std::string_view message, const std::vector<char>& data, std::string_view fileType);
 
-    void sendResponse(int socket, int flags) const;
+    void sendResponse(const ConnectionSocket& socket, int flags) const;
 
     static std::string serve404 () {
         return loadFile("../assets/404/404.html");

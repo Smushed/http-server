@@ -2,13 +2,14 @@
 #include <iostream>
 #include "StatusCodes.h"
 #include "../HttpMethods/HttpResponse.h"
+#include "../tools/ConnectionSocket.h"
 
 
 void Router::registerRoute(const Route& route) {
     this->m_routeList[route.getMethod()].push_back(route);
 }
 
-void Router::processRequest(const int& socket, HttpRequest request) {
+void Router::processRequest(const ConnectionSocket& socket, HttpRequest request) {
     const std::vector<Route>& routes = this->getRoutesByMethod(request.getMethod());
     const Route* reqRoute = nullptr;
     const std::string& uri = request.getURI();

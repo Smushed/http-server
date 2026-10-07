@@ -11,7 +11,7 @@ class Server {
         void spinUp();
         void createRouter();
         Router router{};
-        int listeningSocket{-1};
+        ConnectionSocket listeningSocket{-1};
         const int BUF_SIZE{8192};
 };
 
