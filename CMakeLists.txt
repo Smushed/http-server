@@ -24,4 +24,5 @@ add_executable(http_server main.cpp
         routes/HttpPageRoute.h
         tools/LoadFile.h
         tools/ConnectionSocket.h
+        HttpMethods/SendClientError.h
 )

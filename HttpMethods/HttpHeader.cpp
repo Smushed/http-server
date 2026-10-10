@@ -4,8 +4,7 @@
 #include <iostream>
 
 HttpHeader::HttpHeader(const std::string_view header) {
-    // std::stringstream ss(header);
-    std::stringstream ss;
+    std::stringstream ss(header);
     std::string parsedVal {};
     int i {0};
     constexpr int METHOD_POSITION {0};

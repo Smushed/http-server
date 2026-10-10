@@ -81,14 +81,17 @@ void HttpResponse::sendResponse(const ConnectionSocket& socket, const int flags)
     const unsigned long bodySize { this->m_body.size() };
     responseBuffer.reserve(this->m_version.size() + bodySize + defaultResponseSize());
 
+    responseBuffer.append("HTTP/");
     responseBuffer.append(m_version);
     responseBuffer.append(" ");
     responseBuffer.append(std::to_string(m_statusCode));
     responseBuffer.append(" ");
     responseBuffer.append(m_message);
     responseBuffer.append(spacer());
-    responseBuffer.append(contentTypeText(m_fileType));
-    responseBuffer.append(spacer());
+    if (m_statusCode == 200) {
+        responseBuffer.append(contentTypeText(m_fileType));
+        responseBuffer.append(spacer());
+    }
     responseBuffer.append(contentLength());
     responseBuffer.append(std::to_string(bodySize));
     responseBuffer.append(spacer());

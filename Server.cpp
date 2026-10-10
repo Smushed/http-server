@@ -6,8 +6,8 @@
 #include <sstream>
 #include <unistd.h>
 #include "HttpMethods/HttpRequest.h"
+#include "HttpMethods/SendClientError.h"
 #include "routes/Router.h"
-#include "routes/StatusCodes.h"
 #include "routes/gets/Index.h"
 #include "tools/ConnectionSocket.h"
 
@@ -25,7 +25,11 @@ Server::Server(char *argv[]) {
     hints.ai_addr = nullptr;
     hints.ai_next = nullptr;
 
-    s = getaddrinfo(nullptr, argv[1], &hints, &result);
+    try {
+        s = getaddrinfo(nullptr, argv[1], &hints, &result);
+    } catch (std::runtime_error& err) {
+        throw std::runtime_error("Server failed getaddrinfo");
+    }
     if (s != 0) {
         fprintf(stderr, "%s\n", gai_strerror(s));
     }
@@ -75,6 +79,7 @@ void Server::spinUp() {
         switch (connectionSocket.get()) {
             case 0: printf("Connection Terminated\n"); continue;
             case -1: {
+                SendClientError(connectionSocket);
                 printf("error\n");
                 continue;
             }
@@ -109,8 +114,7 @@ void Server::spinUp() {
             const HttpRequest request {requestAccumulator};
             this->router.processRequest(connectionSocket, request);
         } catch (std::invalid_argument& err) {
-            HttpResponse response{"1.1", 400, err.what(), ""};
-            response.sendResponse(connectionSocket, 0);
+            SendClientError(connectionSocket);
         } catch (std::runtime_error& err) {
             std::string errorMessage {};
             if (!strcmp(err.what(), "")) {
