@@ -4,7 +4,8 @@
 #include <iostream>
 
 HttpHeader::HttpHeader(const std::string_view header) {
-    std::stringstream ss(header);
+    // std::stringstream ss(header);
+    std::stringstream ss;
     std::string parsedVal {};
     int i {0};
     constexpr int METHOD_POSITION {0};
@@ -24,5 +25,8 @@ HttpHeader::HttpHeader(const std::string_view header) {
             break;
         }
         i++;
+    }
+    if (i < 3) {
+        throw std::invalid_argument("Malformed headers");
     }
 }

@@ -2,7 +2,7 @@
 #define HTTP_SERVER_ROUTE_H
 #include <functional>
 #include <string>
-#include "../HttpMethod.h"
+#include "../HttpMethods/HttpMethod.h"
 #include "../HttpMethods/HttpResponse.h"
 
 class Route {

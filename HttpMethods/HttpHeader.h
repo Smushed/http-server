@@ -1,6 +1,6 @@
 #ifndef HTTP_SERVER_HTTPHEADER_H
 #define HTTP_SERVER_HTTPHEADER_H
-#include "../HttpMethod.h"
+#include "HttpMethod.h"
 
 struct HttpHeader {
     HttpMethod method;

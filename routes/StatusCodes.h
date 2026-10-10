@@ -5,6 +5,7 @@
 
 inline const std::map<int, const char*> STATUS_CODES = {
     {200, "OK"},
+    {400, "Error"},
     {404, "404 Not Found"},
     {500, "Internal Server Error"}
 };

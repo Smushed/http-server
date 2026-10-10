@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "HttpMethods/HttpRequest.h"
 #include "routes/Router.h"
+#include "routes/StatusCodes.h"
 #include "routes/gets/Index.h"
 #include "tools/ConnectionSocket.h"
 
@@ -30,18 +31,18 @@ Server::Server(char *argv[]) {
     }
 
     for (rp = result; rp != nullptr; rp = rp->ai_next) {
-        listeningSocket = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-        if (listeningSocket == -1) continue;
+        listeningSocket = ConnectionSocket(socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol));
+        if (listeningSocket.get() == -1) continue;
 
         int opt = 1;
-        if (setsockopt(listeningSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-            close(listeningSocket);
+        if (setsockopt(listeningSocket.get(), SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+            close(listeningSocket.get());
             freeaddrinfo(result);
             throw std::runtime_error("setsockopt(SO_REUSEADDR) failed");
         }
 
-        if (bind(listeningSocket, rp->ai_addr, rp->ai_addrlen) == 0) break;
-        close(listeningSocket);
+        if (bind(listeningSocket.get(), rp->ai_addr, rp->ai_addrlen) == 0) break;
+        close(listeningSocket.get());
     }
     freeaddrinfo(result);
     if (rp == nullptr) {
@@ -51,8 +52,7 @@ Server::Server(char *argv[]) {
 }
 
 Server::~Server() {
-    if (listeningSocket == -1) return;
-    close(listeningSocket);
+    if (listeningSocket.get() == -1) return;
 }
 
 void Server::run() {
@@ -67,11 +67,11 @@ void Server::createRouter() {
 void Server::spinUp() {
     char buf[BUF_SIZE];
     sockaddr_storage peer_addr {};
-    listen(listeningSocket, 5);
+    listen(listeningSocket.get(), 5);
     socklen_t addr_size = sizeof peer_addr;
 
     while (true) {
-        const auto connectionSocket = ConnectionSocket(accept(listeningSocket, (struct sockaddr *)&peer_addr , &addr_size));
+        const auto connectionSocket = ConnectionSocket(accept(listeningSocket.get(), (struct sockaddr *)&peer_addr , &addr_size));
         switch (connectionSocket.get()) {
             case 0: printf("Connection Terminated\n"); continue;
             case -1: {
@@ -108,8 +108,16 @@ void Server::spinUp() {
         try {
             const HttpRequest request {requestAccumulator};
             this->router.processRequest(connectionSocket, request);
+        } catch (std::invalid_argument& err) {
+            HttpResponse response{"1.1", 400, err.what(), ""};
+            response.sendResponse(connectionSocket, 0);
         } catch (std::runtime_error& err) {
-            throw;
+            std::string errorMessage {};
+            if (!strcmp(err.what(), "")) {
+                errorMessage = err.what();
+            }
+            HttpResponse response{"1.1", 500, errorMessage, ""};
+            response.sendResponse(connectionSocket, 0);
         }
     }
 }
